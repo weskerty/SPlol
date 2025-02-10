@@ -132,58 +132,59 @@ code {
 
 .swiper {
     width: 100%;
-    padding: 60px 0; 
+    padding: 40px 0; 
     overflow: visible; 
     position: relative;
 }
 
 .swiper-slide {
-    width: 250px !important;
+    width: 250px !important; 
     position: relative;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; 
+    overflow: hidden; 
+    border-radius: 16px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
-
 
 .swiper-slide a {
     display: block;
     width: 100%;
-    height: 300px; 
+    height: auto; 
     border-radius: 16px;
     overflow: hidden;
     position: relative;
 }
 
-
 .swiper-slide img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: 100%; 
+    object-fit: cover; 
     border-radius: 16px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; 
 }
 
 
 .swiper-slide-active {
     z-index: 2; 
-    transform-origin: center center;
+    transform-origin: center center; 
 }
 
 .swiper-slide-active a {
-    transform: scale(1.1);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    height: 350px; 
+    transform: scale(1.1); 
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); 
+    height: auto; 
 }
 
 .swiper-slide-active img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; 
 }
 
 
 .swiper-slide:not(.swiper-slide-active) {
-    transform: scale(0.9);
-    opacity: 0.7;
+    transform: scale(0.9); 
+    opacity: 0.7; 
 }
 
 
