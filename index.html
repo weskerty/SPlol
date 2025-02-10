@@ -119,29 +119,25 @@
 
         function createSwiper(container, images) {
             container.innerHTML = `
-            <div class="swiper-wrapper">
-                ${images.map(item => `
-                    <div class="swiper-slide">
-                        <a href="${item.link}">
-                            <img src="${item.image}" alt="${item.name}" loading="lazy" />
-                        </a>
-                    </div>
-                `).join('')}
-            </div>
-            <div class="swiper-pagination"></div>
-            `;  
+                <div class="swiper-wrapper">
+                    ${images.map(item => `
+                        <div class="swiper-slide">
+                            <a href="${item.link}">
+                                <img src="${item.image}" alt="${item.name}" loading="lazy" />
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        
             return new Swiper(container, {
-                slidesPerView: 'auto',
-                spaceBetween: 20,
-                loop: true,
-                centeredSlides: true,
+                slidesPerView: 'auto', 
+                spaceBetween: 20, 
+                loop: true, 
+                centeredSlides: true, 
                 autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
+                    delay: 3000, 
+                    disableOnInteraction: false, 
                 }
             });
         }
