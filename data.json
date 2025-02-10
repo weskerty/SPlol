@@ -8,6 +8,11 @@
           "name": "Nenecho"
         },
         {
+          "image": "web/otros/Imagenes/Politicos/PayoCubas.png",
+          "link": "web/otros/Imagenes/Politicos/PayoCubas.html",
+          "name": "PayoCubas"
+        },
+        {
           "image": "web/otros/Imagenes/Politicos/SantiPeña.jpg",
           "link": "web/otros/Imagenes/Politicos/SantiPeña.html",
           "name": "SantiPeña"
