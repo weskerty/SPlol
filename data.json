@@ -3,6 +3,11 @@
     "politicos": {
       "images": [
         {
+          "image": "web/otros/Imagenes/Politicos/Nenecho.png",
+          "link": "web/otros/Imagenes/Politicos/Nenecho.html",
+          "name": "Nenecho"
+        },
+        {
           "image": "web/otros/Imagenes/Politicos/SantiPeña.jpg",
           "link": "web/otros/Imagenes/Politicos/SantiPeña.html",
           "name": "SantiPeña"
