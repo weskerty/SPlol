@@ -8,8 +8,8 @@
     <link rel="icon" type="image/x-icon" href="web/favicon.ico">
     <link rel="stylesheet" href="web/estilo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.css">
-    <meta name="description" content="Info sobre Actividades dañinas para la Sociedad">
-    <meta property="og:image" content="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Detective.png">
+    <meta name="description" content="Base de Datos Sobre Corrupcion en Paraguay">
+    <meta property="og:image" content="https://www.abc.com.py/resizer/v2/LCCGFGFRFJHWNDW3IL3XTDQANU.jpg?auth=e08f02edf642f68d39ccff01365052ef1ca51a53768488f3dacd0739fbad617f&width=1200&smart=true">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 </head>
@@ -21,6 +21,8 @@
     <div class="content" id="content">
         <p>⌛Cargando⏳</p>
     </div>
+
+    <div id="disqus-container"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js"></script>
     
@@ -61,6 +63,7 @@
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
                 let content = await response.text();
         
+                // solo html no disc
                 const contentDiv = document.getElementById('content');
                 contentDiv.innerHTML = content;
         
@@ -77,9 +80,8 @@
                     `;
                 }
         
-                loadDisqus();
                 initializeGalleries();
-        
+
                 if (updateHistory) {
                     history.pushState({ url: url }, '', window.location.href);
                 }
@@ -97,14 +99,13 @@
         
             const disqusDiv = document.createElement('div');
             disqusDiv.id = 'disqus_thread';
-            document.getElementById('content').appendChild(disqusDiv);
+            document.getElementById('disqus-container').appendChild(disqusDiv);
         
             window.disqus_config = function () {
                 this.page.url = 'https://comentariosdepoliticapy/comentarios'; 
                 this.page.identifier = 'comentarios'; //  'comentarios_' + currentPageId; 
             };
         
-
             const s = document.createElement('script');
             s.src = 'https://amigos-steam.disqus.com/embed.js';
             s.setAttribute('data-timestamp', +new Date());
@@ -189,8 +190,8 @@
         document.addEventListener("DOMContentLoaded", () => {
             currentPage = window.location.href;
             loadContent('web/es.html', false);
+            loadDisqus(); 
             isFirstLoad = false;
-
             setTimeout(hideLoadingScreen, 5000);
 
             window.addEventListener('popstate', (event) => {
@@ -223,7 +224,6 @@
         });
         
     </script>
-
     <!-- Widget de Discord -->
     <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
         new Crate({
@@ -231,7 +231,6 @@
             channel: '1295847194771066971' 
         })
     </script>
-
     <noscript>JavaScript OFF. Se requiere JS activado</noscript>
 </body>
 </html>

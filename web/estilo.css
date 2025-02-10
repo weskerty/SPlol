@@ -102,6 +102,7 @@ code {
     border-radius: 30px;
     max-width: 800px;
     margin: 50px auto;
+    margin-bottom: -40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 9);
     position: relative;
     z-index: 1;
@@ -308,4 +309,15 @@ code {
     border-radius: 8px; 
     margin-top: 10px;
     display: block; 
+}
+
+
+#disqus-container {
+    background-color: rgba(0, 0, 0, 0.6); 
+    padding: 20px; 
+    border-radius: 30px;
+    max-width: 800px; 
+    margin: 50px auto; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(7px);
 }
