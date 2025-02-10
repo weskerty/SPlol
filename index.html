@@ -90,14 +90,20 @@
         }
 
         function loadDisqus() {
+            if (document.getElementById('disqus_thread')) {
+                console.log("Disqus ya cargado");
+                return; 
+            }
+        
             const disqusDiv = document.createElement('div');
             disqusDiv.id = 'disqus_thread';
             document.getElementById('content').appendChild(disqusDiv);
-
+        
             window.disqus_config = function () {
-                this.page.url = window.location.href;
-                this.page.identifier = document.title;
+                this.page.url = 'https://comentariosdepoliticapy/comentarios'; 
+                this.page.identifier = 'comentarios'; //  'comentarios_' + currentPageId; 
             };
+        
 
             const s = document.createElement('script');
             s.src = 'https://amigos-steam.disqus.com/embed.js';
