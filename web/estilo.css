@@ -130,6 +130,7 @@ code {
     display: block;
 }
 
+
 .swiper {
     width: 100%;
     padding: 40px 0; 
@@ -149,7 +150,7 @@ code {
 .swiper-slide a {
     display: block;
     width: 100%;
-    height: auto; 
+    height: 300px; 
     border-radius: 16px;
     overflow: hidden;
     position: relative;
@@ -172,7 +173,7 @@ code {
 .swiper-slide-active a {
     transform: scale(1.1); 
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); 
-    height: auto; 
+    height: 350px; 
 }
 
 .swiper-slide-active img {
