@@ -1,0 +1,22 @@
+{
+  "galleries": {
+    "politicos": {
+      "images": [
+        {
+          "image": "web/otros/Imagenes/Politicos/SantiPeña.jpg",
+          "link": "web/otros/Imagenes/Politicos/SantiPeña.html",
+          "name": "SantiPeña"
+        }
+      ]
+    },
+    "empresas": {
+      "images": [
+        {
+          "image": "web/otros/Imagenes/Empresas/Ochsi.png",
+          "link": "web/otros/Imagenes/Empresas/Ochsi.html",
+          "name": "Ochsi"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politica 🇵🇾</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="web/favicon.ico">
+    <link rel="stylesheet" href="web/estilo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.css">
+    <meta name="description" content="Info sobre Actividades dañinas para la Sociedad">
+    <meta property="og:image" content="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Detective.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+</head>
+<body>
+    <div class="loading-screen" id="loading-screen">
+        <p>⌛Cargando⏳</p>
+    </div>
+
+    <div class="content" id="content">
+        <p>⌛Cargando⏳</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js"></script>
+    
+    <script>
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('hide');
+            }
+        }
+
+        async function fetchRSS() {
+            const url = "https://api.rss2json.com/v1/api.json?rss_url=https://silpy.congreso.gov.py/web/FeedRss?opcionRSS=1";
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const feed = data.items.slice(0, 3).map(item => `
+                    <div class="rss-item">
+                        <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
+                        <p>${item.description}</p>
+                    </div>
+                `).join("");
+                return feed;
+            } catch (error) {
+                console.error("Error RSS:", error);
+                return '<p>Error RSS</p>';
+            }
+        }
+
+        async function loadContent(url, updateHistory = true) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
+                let content = await response.text();
+                
+                const contentDiv = document.getElementById('content');
+                contentDiv.innerHTML = content;
+                
+                // Buscar contenedor  RSS 
+                const rssContainer = contentDiv.querySelector('#rss-container');
+                if (rssContainer) {
+                    // Cargar RSS
+                    const rssFeed = await fetchRSS();
+                    rssContainer.innerHTML = `
+                        <div class="rss-section">
+                            <h2>Novedades:</h2>
+                            ${rssFeed}
+                        </div>
+                    `;
+                }
+                
+                loadDisqus();
+                initializeGalleries();
+                
+                if (updateHistory) {
+                    history.pushState({ url: url }, '', window.location.href);
+                }
+            } catch (error) {
+                console.error(`Error cargando contenido: ${error.message}`);
+                document.getElementById('content').innerHTML = `<p>Error Cargando: ${error.message}</p>`;
+            }
+        }
+
+        function loadDisqus() {
+            const disqusDiv = document.createElement('div');
+            disqusDiv.id = 'disqus_thread';
+            document.getElementById('content').appendChild(disqusDiv);
+
+            window.disqus_config = function () {
+                this.page.url = window.location.href;
+                this.page.identifier = document.title;
+            };
+
+            const s = document.createElement('script');
+            s.src = 'https://amigos-steam.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            document.body.appendChild(s);
+        }
+
+        async function loadGalleryData() {
+            try {
+                const basePath = window.location.pathname.includes('/SPlol') ? '/SPlol' : '';
+                const response = await fetch(`${basePath}/data.json`);
+                const data = await response.json();
+                return data.galleries;
+            } catch (error) {
+                console.error('Error loading gallery data:', error);
+                return null;
+            }
+        }
+
+        function createSwiper(container, images) {
+            container.innerHTML = `
+            <div class="swiper-wrapper">
+                ${images.map(item => `
+                    <div class="swiper-slide">
+                        <a href="${item.link}">
+                            <img src="${item.image}" alt="${item.name}" loading="lazy" />
+                        </a>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="swiper-pagination"></div>
+            `;  
+            return new Swiper(container, {
+                slidesPerView: 'auto',
+                spaceBetween: 20,
+                loop: true,
+                centeredSlides: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                }
+            });
+        }
+
+        function createGridGallery(container, images) {
+            container.innerHTML = images.map(item => `
+                <a href="${item.link}">
+                    <img src="${item.image}" alt="${item.name}" loading="lazy" />
+                </a>
+            `).join('');
+        }
+
+        async function initializeGalleries() {
+            const galleryData = await loadGalleryData();
+            if (!galleryData) return;
+
+            const politicosGallery = document.getElementById('politicos-gallery');
+            if (politicosGallery && galleryData.politicos) {
+                politicosGallery.classList.add('swiper');
+                createSwiper(politicosGallery, galleryData.politicos.images);
+            }
+
+            const empresasGallery = document.getElementById('empresas-gallery');
+            if (empresasGallery && galleryData.empresas) {
+                empresasGallery.classList.add('swiper');
+                createSwiper(empresasGallery, galleryData.empresas.images);
+            }
+
+            const politicosGrid = document.getElementById('politicos-grid');
+            if (politicosGrid && galleryData.politicos) {
+                createGridGallery(politicosGrid, galleryData.politicos.images);
+            }
+
+            const empresasGrid = document.getElementById('empresas-grid');
+            if (empresasGrid && galleryData.empresas) {
+                createGridGallery(empresasGrid, galleryData.empresas.images);
+            }
+        }
+
+        let currentPage = null;
+        let isFirstLoad = true;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            currentPage = window.location.href;
+            loadContent('web/es.html', false);
+            isFirstLoad = false;
+
+            setTimeout(hideLoadingScreen, 5000);
+
+            window.addEventListener('popstate', (event) => {
+                if (event.state && event.state.url) {
+                    loadContent(event.state.url, false);
+                } else {
+                    loadContent('web/es.html', false);
+                }
+            });
+        });
+
+        document.addEventListener('click', (event) => {
+            const anchor = event.target.closest('a');
+            if (!anchor) return;
+        
+            // Permitir enlaces con target="_blank" para que se abran en una nueva pestaña
+            if (anchor.target === "_blank") return;
+        
+            if (!anchor.href.includes('web/')) return;
+        
+            event.preventDefault(); 
+        
+            const href = anchor.href;
+            const isSpecificFile = href.endsWith('.html');
+            const baseUrl = href.substring(0, href.lastIndexOf('/') + 1);
+            const targetUrl = isSpecificFile ? href : baseUrl + 'es.html';
+        
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            loadContent(targetUrl);
+        });
+        
+    </script>
+
+    <!-- Widget de Discord -->
+    <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
+        new Crate({
+            server: '1295581997967868005',
+            channel: '1295847194771066971' 
+        })
+    </script>
+
+    <noscript>JavaScript OFF. Se requiere JS activado</noscript>
+</body>
+</html>
