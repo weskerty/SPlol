@@ -32,6 +32,11 @@
     "empresas": {
       "images": [
         {
+          "image": "web/otros/Imagenes/Empresas/BoxMayorista.jpg",
+          "link": "web/otros/Imagenes/Empresas/BoxMayorista.html",
+          "name": "BoxMayorista"
+        },
+        {
           "image": "web/otros/Imagenes/Empresas/Ochsi.png",
           "link": "web/otros/Imagenes/Empresas/Ochsi.html",
           "name": "Ochsi"
