@@ -17,13 +17,10 @@
     <div class="loading-screen" id="loading-screen">
         <p>⌛Cargando⏳</p>
     </div>
-
     <div class="content" id="content">
         <p>⌛Cargando⏳</p>
     </div>
-
     <div id="disqus-container"></div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js"></script>
     
     <script>
@@ -81,7 +78,6 @@
                 }
         
                 initializeGalleries();
-
                 if (updateHistory) {
                     history.pushState({ url: url }, '', window.location.href);
                 }
@@ -157,6 +153,53 @@
             `).join('');
         }
 
+        async function loadCustomGallery() {
+            const galleryContainer = document.getElementById('custom-gallery');
+            if (!galleryContainer) return;
+
+            const galleryData = galleryContainer.getAttribute('data-GaleriaInterna');
+            if (!galleryData) {
+                console.error("No se encontró el atributo data-GaleriaInterna");
+                return;
+            }
+
+            let images;
+            try {
+                images = JSON.parse(galleryData);
+            } catch (error) {
+                console.error("Error al parsear data-GaleriaInterna:", error);
+                return;
+            }
+
+            galleryContainer.innerHTML = `
+                <div class="swiper-wrapper">
+                    ${images.map(item => `
+                        <div class="swiper-slide">
+                            <a href="${item.link}" target="_blank">
+                                <img src="${item.image}" alt="${item.name}" loading="lazy" />
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="swiper-pagination"></div>
+            `;
+
+            new Swiper(galleryContainer, {
+                slidesPerView: 'auto',
+                spaceBetween: 20,
+                loop: true,
+                centeredSlides: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+            });
+        }
+
         async function initializeGalleries() {
             const galleryData = await loadGalleryData();
             if (!galleryData) return;
@@ -173,27 +216,17 @@
                 createSwiper(empresasGallery, galleryData.empresas.images);
             }
 
-            const politicosGrid = document.getElementById('politicos-grid');
-            if (politicosGrid && galleryData.politicos) {
-                createGridGallery(politicosGrid, galleryData.politicos.images);
-            }
-
-            const empresasGrid = document.getElementById('empresas-grid');
-            if (empresasGrid && galleryData.empresas) {
-                createGridGallery(empresasGrid, galleryData.empresas.images);
-            }
+            loadCustomGallery();
         }
 
         let currentPage = null;
         let isFirstLoad = true;
-
         document.addEventListener("DOMContentLoaded", () => {
             currentPage = window.location.href;
             loadContent('web/es.html', false);
             loadDisqus(); 
             isFirstLoad = false;
             setTimeout(hideLoadingScreen, 5000);
-
             window.addEventListener('popstate', (event) => {
                 if (event.state && event.state.url) {
                     loadContent(event.state.url, false);
@@ -206,24 +239,24 @@
         document.addEventListener('click', (event) => {
             const anchor = event.target.closest('a');
             if (!anchor) return;
-        
+
             // Permitir enlaces con target="_blank" para que se abran en una nueva pestaña
             if (anchor.target === "_blank") return;
-        
+
             if (!anchor.href.includes('web/')) return;
-        
+
             event.preventDefault(); 
-        
+
             const href = anchor.href;
             const isSpecificFile = href.endsWith('.html');
             const baseUrl = href.substring(0, href.lastIndexOf('/') + 1);
             const targetUrl = isSpecificFile ? href : baseUrl + 'es.html';
-        
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
             loadContent(targetUrl);
         });
-        
     </script>
+
     <!-- Widget de Discord -->
     <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
         new Crate({
