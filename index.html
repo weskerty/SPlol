@@ -190,22 +190,27 @@
                 if (container.classList.contains('contenedor-imagenes-animado')) {
                     container.classList.add('swiper');
                     createSwiper(container, galleryData.images);
-                } else {
+                } else if (container.classList.contains('grid-gallery')) {
                     createGridGallery(container, galleryData.images);
                 }
             }
         
-            const politicosGallery = document.getElementById('politicos-gallery');
-            const empresasGallery = document.getElementById('empresas-gallery');
-            
-            if (politicosGallery) {
-                await initializeGallery(politicosGallery, 'politicos');
-            }
-            if (empresasGallery) {
-                await initializeGallery(empresasGallery, 'empresas');
+            const galleryContainers = {
+                'politicos-gallery': 'politicos',
+                'empresas-gallery': 'empresas',
+                'politicos-grid': 'politicos',
+                'empresas-grid': 'empresas'
+            };
+        
+            for (const [containerId, dataKey] of Object.entries(galleryContainers)) {
+                const container = document.getElementById(containerId);
+                if (container) {
+                    await initializeGallery(container, dataKey);
+                }
             }
         
-            document.querySelectorAll('.contenedor-imagenes-animado:not(#politicos-gallery):not(#empresas-gallery)').forEach(async (container) => {
+            const inlineGallerySelector = '.contenedor-imagenes-animado:not(#politicos-gallery):not(#empresas-gallery)';
+            document.querySelectorAll(inlineGallerySelector).forEach(async (container) => {
                 const inlineData = parseInlineGalleryData(container);
                 if (inlineData) {
                     await initializeGallery(container, inlineData);
