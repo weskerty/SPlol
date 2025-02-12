@@ -158,30 +158,59 @@
         }
 
         async function initializeGalleries() {
-            const galleryData = await loadGalleryData();
-            if (!galleryData) return;
-
+            function parseInlineGalleryData(element) {
+                try {
+                    const content = element.textContent.trim();
+                    if (!content) return null;
+                    const jsonStr = `[${content}]`;
+                    return { images: JSON.parse(jsonStr) };
+                } catch (error) {
+                    console.error('Error parsing inline gallery data:', error);
+                    return null;
+                }
+            }
+        
+            async function initializeGallery(container, dataSource) {
+                if (!container) return;
+                
+                let galleryData;
+                
+                if (typeof dataSource === 'string') {
+                    const allGalleryData = await loadGalleryData();
+                    galleryData = allGalleryData?.[dataSource];
+                } else {
+                    galleryData = dataSource;
+                }
+        
+                if (!galleryData?.images?.length) {
+                    console.error('No valid gallery data found');
+                    return;
+                }
+        
+                if (container.classList.contains('contenedor-imagenes-animado')) {
+                    container.classList.add('swiper');
+                    createSwiper(container, galleryData.images);
+                } else {
+                    createGridGallery(container, galleryData.images);
+                }
+            }
+        
             const politicosGallery = document.getElementById('politicos-gallery');
-            if (politicosGallery && galleryData.politicos) {
-                politicosGallery.classList.add('swiper');
-                createSwiper(politicosGallery, galleryData.politicos.images);
-            }
-
             const empresasGallery = document.getElementById('empresas-gallery');
-            if (empresasGallery && galleryData.empresas) {
-                empresasGallery.classList.add('swiper');
-                createSwiper(empresasGallery, galleryData.empresas.images);
+            
+            if (politicosGallery) {
+                await initializeGallery(politicosGallery, 'politicos');
             }
-
-            const politicosGrid = document.getElementById('politicos-grid');
-            if (politicosGrid && galleryData.politicos) {
-                createGridGallery(politicosGrid, galleryData.politicos.images);
+            if (empresasGallery) {
+                await initializeGallery(empresasGallery, 'empresas');
             }
-
-            const empresasGrid = document.getElementById('empresas-grid');
-            if (empresasGrid && galleryData.empresas) {
-                createGridGallery(empresasGrid, galleryData.empresas.images);
-            }
+        
+            document.querySelectorAll('.contenedor-imagenes-animado:not(#politicos-gallery):not(#empresas-gallery)').forEach(async (container) => {
+                const inlineData = parseInlineGalleryData(container);
+                if (inlineData) {
+                    await initializeGallery(container, inlineData);
+                }
+            });
         }
 
         let currentPage = null;
